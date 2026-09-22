@@ -26,25 +26,47 @@ A **corporate audience with no IT background** (context: Merck KGaA, Darmstadt, 
 The deck tells **the story of how AI evolved**. Each concept and abbreviation is introduced **at the point in the
 story where it appeared**, so the terms are learned alongside the history and not as a separate glossary.
 
-Current arc (18 slides):
+Current arc (33 slides):
 1. Title
-2. Five nested ideas: AI → ML → Deep Learning → GenAI → Agentic AI (1955–2024)
-3. Rules vs. learning from data (AI vs. ML)
-4. Neural networks / deep learning
-5. Recognizing vs. creating (GenAI, LLM)
-6. Next-word prediction
-7. Chatbot vs. agent
-8. What an agent is made of (model + instructions + tools + runtime)
-9. Bridge slide: from foundations to mechanics
-10. Why a model alone is not enough
-11. Timeline: RAG → tool use → agents → MCP
-12. RAG
-13. Tool use (and which name to use for it)
-14. MCP: the integration problem
-15. The four-layer stack
-16. MCP architecture (host / client / server)
-17. The hard part: constraining the loop
-18. Sources
+2. **Terminology hell**: a deliberately chaotic cloud of every term the deck explains (`scripts/slide_terminology_hell.py`)
+3. Five nested ideas: AI → ML → Deep Learning → GenAI → Agentic AI. Years: AI 1955 (term coined), ML 1959 (Samuel), DL 2012 (AlexNet), GenAI 2018, Agentic AI 2024 (`scripts/edit_foundations_dates.py`)
+4. *Section divider · Artificial Intelligence (orientation only, no part number, no content)*
+5. *Section divider · Part 1: Rule-based AI*
+6. **Stream 1, explicit programming / rule-based AI** (also called symbolic AI): IF/ELSE spam flowchart, where rules break, famous examples (`scripts/slide_explicit_programming.py`)
+7. *Section divider · Part 2: Machine Learning*
+8. **Stream 2, machine learning**: same spam problem, learned from labelled examples; Samuel 1959 (`scripts/slide_machine_learning.py`)
+9. **Statement slide**: "Both streams ran side by side. Learning took the lead from the 1990s, as data and computing power grew." Statement only (`scripts/slide_ml_outperforms.py`)
+10. *Section divider · Part 3: Deep Learning*
+11. Neural networks / deep learning
+12. *Section divider · Part 4: Generative AI*
+13. Recognizing vs. creating (GenAI, LLM)
+14. **Transformer / GPT**: attention demo + GPT spelled out (`scripts/slide_transformer.py`)
+15. **Token**: text → tokens → numbers (`scripts/slide_token.py`)
+16. Next-word prediction
+17. **Pre-training**: any text → next-token guessing staircase → learning loop (loss, gradients, adjust weights) (`scripts/slide_pretraining.py`)
+18. **Prompt**: anatomy of a good prompt → LLM → answer (`scripts/slide_prompt.py`)
+19. **Context window**: conversation strip with the window, how big windows got (`scripts/slide_context_window.py`)
+20. **Hallucination**: invented-study chat example, why it happens, what helps (`scripts/slide_hallucination.py`)
+21. *Section divider · Part 5: Agentic AI*
+22. Chatbot vs. agent
+23. What an agent is made of (model + instructions + tools + runtime)
+24. Bridge slide: from foundations to mechanics
+25. Why a model alone is not enough
+26. Timeline: RAG → tool use → agents → MCP
+27. RAG
+28. Tool use (and which name to use for it)
+29. MCP: the integration problem
+30. The four-layer stack
+31. MCP architecture (host / client / server)
+32. The hard part: constraining the loop
+33. Sources
+
+The five parts are Rule-based AI, Machine Learning, Deep Learning, Generative AI and Agentic AI. The AI divider
+before them only orients the audience. All dividers (`scripts/slide_sections.py`) show a family tree
+AI → (Rule-based AI | Machine Learning) → Deep Learning → (Generative AI | Agentic AI). The current node is
+filled mint, and its line of ancestors is highlighted in teal. Unnamed dashed "•••" branches (both on the right)
+show that AI and ML have more children than drawn. Each part divider also has an "In this part" list. Update that
+list when slides are added to or removed from a part.
 
 Rules for content:
 - **Spell out every abbreviation the first time it appears** (e.g. "LLM (Large Language Model)"), then use the short form.
@@ -69,6 +91,7 @@ The **title slide (slide 1) defines the design**. Every slide must follow it.
 | Light grey (borders, dividers) | `#DDE5E9` | Card borders, separators |
 | Muted text | `#6B7B8C` | Captions, footers, secondary text |
 | Soft text on dark | `#AFC2CE` | Subtitles on navy backgrounds |
+| Dim text on dark | `#8FA6B2` | Secondary/small text on navy (use this, not `#6B7B8C`, when text sits over circles) |
 | White | `#FFFFFF` | Headlines on dark, card fills on light |
 
 Don't introduce new accent colors. If more categories are needed, use tints of teal/mint/navy.
@@ -93,12 +116,15 @@ corners of content slides. It must never compete with or overlap the content. Ci
 e.g. nested circles for "AI ⊃ ML ⊃ DL".
 
 ### Visual explanations first
-Use **as many visual explanation aids as possible**. The simplified neural network on slide 4 (input nodes → hidden
+Use **as many visual explanation aids as possible**. The simplified neural network on slide 11 (input nodes → hidden
 layers → output, connected by lines) is the reference example. Every concept should have a picture where possible:
 - Diagrams built from native PowerPoint shapes (ellipses, lines, arrows, rectangles) in the palette. Don't use
   stock images or clip art.
 - Flows (left → right), nested sets, timelines, before/after comparisons, simple toy examples (e.g. the next-word
-  probability bars on slide 6).
+  probability bars on slide 16).
+- **Numbered steps** are labelled "STEP 1: TEXT" (`d.step_label`), never "1 / text". When several steps share one
+  card, give each step its own light box (`d.step_box`: light background, thin border, small fixed corner radius).
+  Sub-steps inside a step use letters (a, b, c) so they don't clash with the step numbers.
 - Diagrams must be simplified and labelled in plain language. They illustrate the idea and are not an exact
   technical reproduction.
 
@@ -107,19 +133,30 @@ layers → output, connected by lines) is the reference example. Every concept s
 - Title and section/bridge slides: navy background. Content slides: `#F4F7F8` light background.
 
 ## Known issues in the current deck (fix when touching those slides)
-- Slides **3, 4, 5, 6, 16** use off-system fonts (Arial, Bahnschrift Condensed, Consolas, Courier New). Change
+- Slides **11, 13, 16, 31** use off-system fonts (Arial, Bahnschrift Condensed, Consolas, Courier New). Change
   them to Oswald / Roboto / JetBrains Mono. Some also lack the explicit slide background.
-- Slide 4: headline is split as "N eural  Networks", and the hard-coded page number in the bottom right says "06" (wrong for slide 4).
-- Slide 11: headline "Evolution of Agentic" looks truncated.
-- Slide 2: years are debatable (ML 1997, but the term dates to 1959; Deep Learning 2017, but the usual
-  breakthrough is 2012 (AlexNet), and 2017 is the Transformer). Clarify or correct them.
-- Slides 12–17 are written for a technical audience ("parametric memory", "top-k", "M×N connectors", "LSP",
+- Slide 11: headline is split as "N eural  Networks", and the bottom right has a hard-coded page number "06". It is wrong (slide 11) and breaks whenever slides move, so remove it.
+- Slide 26: headline "Evolution of Agentic" looks truncated.
+- Slides 27–32 are written for a technical audience ("parametric memory", "top-k", "M×N connectors", "LSP",
   "control layer"). Rewrite them for non-IT readers.
-- Slide 17 contains a note about Claude's knowledge cutoff. This is an authoring note and must not appear on a slide.
+- Slide 32 contains a note about Claude's knowledge cutoff. This is an authoring note and must not appear on a slide.
+- Slide 13 already says LLMs "predict successive tokens" before tokens are explained on slide 15. Reword it
+  (e.g. "predict the next piece of text") when touching that slide.
+- If a term is added to or removed from the deck, update the term cloud on slide 2 (`TERMS` in
+  `scripts/slide_terminology_hell.py`). Every term in the cloud must be explained somewhere.
 
 ## Working with the deck
+- **The user also edits slides by hand in PowerPoint. Never overwrite those edits.** Before re-running any slide
+  script, run `.venv/bin/python scripts/check_drift.py scripts/slide_<name>.py`. If it reports drift, port the
+  manual edits into the script first, rerun the check until it reports "No drift", and only then rebuild.
+  Hand-tuned values in scripts are marked with a "user edit" comment; keep them unless asked to change them.
+- While the deck is open in PowerPoint (a `~$ai-terminology-hell.pptx` lock file exists), script edits and a
+  later save in PowerPoint overwrite each other. Ask the user to save and close the deck before scripts write to it.
 - The `.pptx` is the source of truth. Edit it programmatically (python-pptx in `.venv`, or direct OOXML edits);
   `python-pptx` 1.0.2 is installed in `.venv`; run scripts with `.venv/bin/python`.
+- To preview changes while the deck is open in PowerPoint, build into a temporary copy in `.preview/` (ignored by
+  git) and run `scripts/render.sh .preview/deck.pptx`. Write to the real deck only after the user has closed it,
+  then delete `.preview/`.
 - **Always check your edits visually:** run `scripts/render.sh` (optionally with a deck path) and then look at
   `.render/slide-NN.png`. It exports a PDF with the installed Microsoft PowerPoint through AppleScript, then
   converts it to PNGs with PyMuPDF from `.venv`. Check for text overflow, overlaps, off-slide elements and circles
@@ -127,6 +164,18 @@ layers → output, connected by lines) is the reference example. Every concept s
 - Don't install tools globally (no Homebrew / LibreOffice / poppler). Python dependencies go into `.venv` only.
   PowerPoint's direct "save as PNG" silently produces nothing, and files inside PowerPoint's sandbox container
   can't be read, so always export into the project folder.
+  PowerPoint sometimes exports a stale copy of a file that just changed; `render.sh` then fails with a
+  slide-count warning. Simply run it again.
 - Keep a backup / commit before big structural edits. The `.pptx` is binary, so git diffs are not readable.
 - The sources slide links to internal Merck intranet (evarooms) pages. Don't remove or alter those URLs without
   asking.
+- **Slides are built by scripts:** `scripts/design.py` holds the design system (colors, fonts, `new_slide`,
+  `kicker`, `text`, `accent_bar`, `circle`), and each new or rebuilt slide has its own
+  `scripts/slide_<name>.py`. A slide script replaces its previous version when re-run (it finds the slide by a
+  marker shape name), so you can run it repeatedly. Run with `.venv/bin/python scripts/slide_<name>.py`, then
+  `scripts/render.sh`. Slide scripts insert themselves after an anchor slide (`d.index_after`, by headline
+  text or another script's marker) instead of a fixed index, so they stay in place when slides are added.
+  Content slides use `d.content_slide(...)` plus `card`, `chip`, `label`, `line`, `takeaway`. Keep subtitles
+  to one line (about 90 characters).
+- Speaker notes can't be added yet: the deck's notes master has no body placeholder, so python-pptx returns no
+  notes text frame. This needs fixing before notes can be written.

@@ -219,3 +219,9 @@ __marimo__/
 
 # Rendered slide previews
 .render/
+
+# PowerPoint lock files (exist while a deck is open)
+~$*
+
+# Preview copies rendered while the real deck is open in PowerPoint
+.preview/
