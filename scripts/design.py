@@ -260,3 +260,58 @@ def step_box(slide, x, y, w, h):
     """Light boundary that groups one step inside a card."""
     return rect(slide, x, y, w, h, fill=LIGHT_BG, line=BORDER, radius=0.08)
 
+
+
+def rich_text(slide, parts, x, y, w, h, font=BODY, size=12, align=PP_ALIGN.LEFT, spacing=None):
+    """One line of text made of (value, colour) parts, e.g. to colour single numbers in a formula."""
+    box = slide.shapes.add_textbox(Inches(x), Inches(y), Inches(w), Inches(h))
+    tf = box.text_frame
+    tf.word_wrap = False
+    tf.margin_left = tf.margin_right = tf.margin_top = tf.margin_bottom = 0
+    p = tf.paragraphs[0]
+    p.alignment = align
+    for value, color in parts:
+        run = p.add_run()
+        run.text = value
+        run.font.name = font
+        run.font.size = Pt(size)
+        run.font.color.rgb = color
+        if spacing is not None:
+            run._r.get_or_add_rPr().set("spc", str(spacing))
+    return box
+
+
+def svg_picture(slide, svg_path, x, y, w, h):
+    """Insert an SVG image (e.g. a PowerPoint stock icon) at the given position, in inches.
+
+    python-pptx cannot add SVGs through add_picture, so the image part and the <p:pic> element are
+    built by hand, the same way PowerPoint writes them (an svgBlip with no raster fallback)."""
+    from pptx.opc.constants import RELATIONSHIP_TYPE as RT
+    from pptx.opc.package import Part
+    from pptx.opc.packuri import PackURI
+    from pptx.oxml import parse_xml
+
+    package = slide.part.package
+    used = [p.partname for p in package.iter_parts() if str(p.partname).startswith("/ppt/media/")]
+    n = 1
+    while PackURI(f"/ppt/media/svg{n}.svg") in used:
+        n += 1
+    part = Part(PackURI(f"/ppt/media/svg{n}.svg"), "image/svg+xml",
+                package=package, blob=open(svg_path, "rb").read())
+    rId = slide.part.relate_to(part, RT.IMAGE)
+
+    shape_id = max([sh.shape_id for sh in slide.shapes] or [1]) + 1
+    xml = (
+        '<p:pic xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main" '
+        'xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" '
+        'xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">'
+        f'<p:nvPicPr><p:cNvPr id="{shape_id}" name="Picture {shape_id}"/>'
+        '<p:cNvPicPr><a:picLocks noChangeAspect="1"/></p:cNvPicPr><p:nvPr/></p:nvPicPr>'
+        '<p:blipFill><a:blip><a:extLst>'
+        '<a:ext uri="{96DAC541-7B7A-43D3-8B79-37D633B846F1}">'
+        f'<asvg:svgBlip xmlns:asvg="http://schemas.microsoft.com/office/drawing/2016/SVG/main" r:embed="{rId}"/>'
+        '</a:ext></a:extLst></a:blip><a:stretch><a:fillRect/></a:stretch></p:blipFill>'
+        f'<p:spPr><a:xfrm><a:off x="{Inches(x)}" y="{Inches(y)}"/>'
+        f'<a:ext cx="{Inches(w)}" cy="{Inches(h)}"/></a:xfrm>'
+        '<a:prstGeom prst="rect"><a:avLst/></a:prstGeom></p:spPr></p:pic>')
+    slide.shapes._spTree.append(parse_xml(xml))

@@ -32,6 +32,21 @@ def marked_slides(prs):
     return out
 
 
+def shape_colors(sh):
+    """(fill, line) colour as hex, or None where it isn't a plain solid colour."""
+    out = []
+    line = getattr(sh, "line", None)          # connectors have a line but no fill
+    for part in (getattr(sh, "fill", None), getattr(line, "fill", None)):
+        value = None
+        try:
+            if part is not None and part.type == 1:
+                value = str(part.fore_color.rgb)
+        except Exception:
+            value = None
+        out.append(value)
+    return tuple(out)
+
+
 def describe(sh):
     text, sizes = "", []
     if sh.has_text_frame:
@@ -40,7 +55,25 @@ def describe(sh):
         sizes = sorted({r.font.size.pt for p in sh.text_frame.paragraphs for r in p.runs
                         if r.font.size and r.text.strip()})
     geo = [Emu(v).inches for v in (sh.left, sh.top, sh.width, sh.height)]
-    return str(sh.shape_type), geo, text, sizes
+    geo.append(round(sh.rotation, 1) / 100)        # rotation, scaled into the same tolerance
+    colors = shape_colors(sh)
+    try:                                   # line width, so thickness changes count as drift too
+        colors += (round(sh.line.width.pt, 2) if sh.line.width else None,)
+    except Exception:
+        pass
+    if sh.has_text_frame:
+        # Distinct colours of non-blank runs (PowerPoint splits runs when text is edited by hand).
+        run_colors = set()
+        for p in sh.text_frame.paragraphs:
+            for r in p.runs:
+                if not r.text.strip():
+                    continue
+                try:
+                    run_colors.add(str(r.font.color.rgb))
+                except Exception:
+                    pass
+        colors += tuple(sorted(run_colors))
+    return str(sh.shape_type), geo, text, sizes, colors
 
 
 def compare(a, b):
@@ -49,8 +82,8 @@ def compare(a, b):
     if len(sa) != len(sb):
         diffs.append(f"shape count: deck {len(sa)} vs script {len(sb)}")
     for i, (x, y) in enumerate(zip(sa, sb)):
-        tx, gx, textx, szx = describe(x)
-        ty, gy, texty, szy = describe(y)
+        tx, gx, textx, szx, cx = describe(x)
+        ty, gy, texty, szy, cy = describe(y)
         label = textx or texty or tx
         if tx != ty:
             diffs.append(f"#{i} type: deck {tx} vs script {ty}")
@@ -61,6 +94,8 @@ def compare(a, b):
             diffs.append(f"#{i} text: deck '{textx[:50]}' vs script '{texty[:50]}'")
         if szx != szy:
             diffs.append(f"#{i} '{label[:40]}' font sizes: deck {szx} vs script {szy}")
+        if cx != cy:
+            diffs.append(f"#{i} '{label[:40]}' colours: deck {cx} vs script {cy}")
     return diffs
 
 

@@ -5,7 +5,7 @@ Placed right after the next-word prediction slide. Re-running replaces it.
 import design as d
 
 MARKER = "slide-prompt"
-ANCHOR = "slide-pretraining"
+ANCHOR = "slide-llm-terms-divider"
 
 # (part, chip fill, chip text color, example text)
 PARTS = [

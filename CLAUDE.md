@@ -26,7 +26,7 @@ A **corporate audience with no IT background** (context: Merck KGaA, Darmstadt, 
 The deck tells **the story of how AI evolved**. Each concept and abbreviation is introduced **at the point in the
 story where it appeared**, so the terms are learned alongside the history and not as a separate glossary.
 
-Current arc (33 slides):
+Current arc (34 slides):
 1. Title
 2. **Terminology hell**: a deliberately chaotic cloud of every term the deck explains (`scripts/slide_terminology_hell.py`)
 3. Five nested ideas: AI → ML → Deep Learning → GenAI → Agentic AI. Years: AI 1955 (term coined), ML 1959 (Samuel), DL 2012 (AlexNet), GenAI 2018, Agentic AI 2024 (`scripts/edit_foundations_dates.py`)
@@ -37,29 +37,30 @@ Current arc (33 slides):
 8. **Stream 2, machine learning**: same spam problem, learned from labelled examples; Samuel 1959 (`scripts/slide_machine_learning.py`)
 9. **Statement slide**: "Both streams ran side by side. Learning took the lead from the 1990s, as data and computing power grew." Statement only (`scripts/slide_ml_outperforms.py`)
 10. *Section divider · Part 3: Deep Learning*
-11. Neural networks / deep learning
+11. **Neural networks**: input/hidden/output layers, one layer and one weight called out, what is learned, tokens in and out (`scripts/slide_neural_network.py`)
 12. *Section divider · Part 4: Generative AI*
-13. Recognizing vs. creating (GenAI, LLM)
-14. **Transformer / GPT**: attention demo + GPT spelled out (`scripts/slide_transformer.py`)
+13. **Generative AI**: recognise (label in) vs. generate (new content), and the branches text/LLM · images · audio · video (`scripts/slide_generative_ai.py`)
+14. **Transformer / GPT**: milestone band 2017 Google → 2018 OpenAI, decoder-only attention demo ("it" only looks back), GPT spelled out (`scripts/slide_transformer.py`)
 15. **Token**: text → tokens → numbers (`scripts/slide_token.py`)
 16. Next-word prediction
 17. **Pre-training**: any text → next-token guessing staircase → learning loop (loss, gradients, adjust weights) (`scripts/slide_pretraining.py`)
-18. **Prompt**: anatomy of a good prompt → LLM → answer (`scripts/slide_prompt.py`)
-19. **Context window**: conversation strip with the window, how big windows got (`scripts/slide_context_window.py`)
-20. **Hallucination**: invented-study chat example, why it happens, what helps (`scripts/slide_hallucination.py`)
-21. *Section divider · Part 5: Agentic AI*
-22. Chatbot vs. agent
-23. What an agent is made of (model + instructions + tools + runtime)
-24. Bridge slide: from foundations to mechanics
-25. Why a model alone is not enough
-26. Timeline: RAG → tool use → agents → MCP
-27. RAG
-28. Tool use (and which name to use for it)
-29. MCP: the integration problem
-30. The four-layer stack
-31. MCP architecture (host / client / server)
-32. The hard part: constraining the loop
-33. Sources
+18. *Sub-divider · "Terms you meet when working with LLMs": Prompt · Context window · Hallucination (`scripts/slide_llm_terms_divider.py`)*
+19. **Prompt**: anatomy of a good prompt → LLM → answer (`scripts/slide_prompt.py`)
+20. **Context window**: conversation strip with the window, how big windows got (`scripts/slide_context_window.py`)
+21. **Hallucination**: invented-study chat example, why it happens, what helps (`scripts/slide_hallucination.py`)
+22. *Section divider · Part 5: Agentic AI*
+23. Chatbot vs. agent
+24. What an agent is made of (model + instructions + tools + runtime)
+25. Bridge slide: from foundations to mechanics
+26. Why a model alone is not enough
+27. Timeline: RAG → tool use → agents → MCP
+28. RAG
+29. Tool use (and which name to use for it)
+30. MCP: the integration problem
+31. The four-layer stack
+32. MCP architecture (host / client / server)
+33. The hard part: constraining the loop
+34. Sources
 
 The five parts are Rule-based AI, Machine Learning, Deep Learning, Generative AI and Agentic AI. The AI divider
 before them only orients the audience. All dividers (`scripts/slide_sections.py`) show a family tree
@@ -67,6 +68,9 @@ AI → (Rule-based AI | Machine Learning) → Deep Learning → (Generative AI |
 filled mint, and its line of ancestors is highlighted in teal. Unnamed dashed "•••" branches (both on the right)
 show that AI and ML have more children than drawn. Each part divider also has an "In this part" list. Update that
 list when slides are added to or removed from a part.
+
+Inside Part 4 a lighter **sub-divider** (light background, no family tree) opens the block of term slides
+(`scripts/slide_llm_terms_divider.py`). Its chip list must match the slides that follow it.
 
 Rules for content:
 - **Spell out every abbreviation the first time it appears** (e.g. "LLM (Large Language Model)"), then use the short form.
@@ -116,12 +120,12 @@ corners of content slides. It must never compete with or overlap the content. Ci
 e.g. nested circles for "AI ⊃ ML ⊃ DL".
 
 ### Visual explanations first
-Use **as many visual explanation aids as possible**. The simplified neural network on slide 11 (input nodes → hidden
-layers → output, connected by lines) is the reference example. Every concept should have a picture where possible:
+Use **as many visual explanation aids as possible**. The neural network on slide 11 (input/hidden/output layers, callouts for one layer and one weight,
+tokens in and out) is the reference example. Every concept should have a picture where possible:
 - Diagrams built from native PowerPoint shapes (ellipses, lines, arrows, rectangles) in the palette. Don't use
   stock images or clip art.
 - Flows (left → right), nested sets, timelines, before/after comparisons, simple toy examples (e.g. the next-word
-  probability bars on slide 16).
+  probability bars on slide 17).
 - **Numbered steps** are labelled "STEP 1: TEXT" (`d.step_label`), never "1 / text". When several steps share one
   card, give each step its own light box (`d.step_box`: light background, thin border, small fixed corner radius).
   Sub-steps inside a step use letters (a, b, c) so they don't clash with the step numbers.
@@ -133,15 +137,12 @@ layers → output, connected by lines) is the reference example. Every concept s
 - Title and section/bridge slides: navy background. Content slides: `#F4F7F8` light background.
 
 ## Known issues in the current deck (fix when touching those slides)
-- Slides **11, 13, 16, 31** use off-system fonts (Arial, Bahnschrift Condensed, Consolas, Courier New). Change
+- Slides **17, 32** use off-system fonts (Arial, Bahnschrift Condensed, Consolas, Courier New). Change
   them to Oswald / Roboto / JetBrains Mono. Some also lack the explicit slide background.
-- Slide 11: headline is split as "N eural  Networks", and the bottom right has a hard-coded page number "06". It is wrong (slide 11) and breaks whenever slides move, so remove it.
-- Slide 26: headline "Evolution of Agentic" looks truncated.
-- Slides 27–32 are written for a technical audience ("parametric memory", "top-k", "M×N connectors", "LSP",
+- Slide 27: headline "Evolution of Agentic" looks truncated.
+- Slides 28–33 are written for a technical audience ("parametric memory", "top-k", "M×N connectors", "LSP",
   "control layer"). Rewrite them for non-IT readers.
-- Slide 32 contains a note about Claude's knowledge cutoff. This is an authoring note and must not appear on a slide.
-- Slide 13 already says LLMs "predict successive tokens" before tokens are explained on slide 15. Reword it
-  (e.g. "predict the next piece of text") when touching that slide.
+- Slide 33 contains a note about Claude's knowledge cutoff. This is an authoring note and must not appear on a slide.
 - If a term is added to or removed from the deck, update the term cloud on slide 2 (`TERMS` in
   `scripts/slide_terminology_hell.py`). Every term in the cloud must be explained somewhere.
 
@@ -150,6 +151,8 @@ layers → output, connected by lines) is the reference example. Every concept s
   script, run `.venv/bin/python scripts/check_drift.py scripts/slide_<name>.py`. If it reports drift, port the
   manual edits into the script first, rerun the check until it reports "No drift", and only then rebuild.
   Hand-tuned values in scripts are marked with a "user edit" comment; keep them unless asked to change them.
+  The check compares position, size, text, font sizes and colours — it cannot see everything, so read the
+  rendered slide as well before rebuilding one the user has touched.
 - While the deck is open in PowerPoint (a `~$ai-terminology-hell.pptx` lock file exists), script edits and a
   later save in PowerPoint overwrite each other. Ask the user to save and close the deck before scripts write to it.
 - The `.pptx` is the source of truth. Edit it programmatically (python-pptx in `.venv`, or direct OOXML edits);
@@ -169,6 +172,8 @@ layers → output, connected by lines) is the reference example. Every concept s
 - Keep a backup / commit before big structural edits. The `.pptx` is binary, so git diffs are not readable.
 - The sources slide links to internal Merck intranet (evarooms) pages. Don't remove or alter those URLs without
   asking.
+- Images the user inserts (e.g. PowerPoint stock icons, which are SVGs) are extracted to `assets/` and
+  re-inserted by the slide script with `d.svg_picture(...)`, so a rebuild keeps them.
 - **Slides are built by scripts:** `scripts/design.py` holds the design system (colors, fonts, `new_slide`,
   `kicker`, `text`, `accent_bar`, `circle`), and each new or rebuilt slide has its own
   `scripts/slide_<name>.py`. A slide script replaces its previous version when re-run (it finds the slide by a

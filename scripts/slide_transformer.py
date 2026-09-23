@@ -1,76 +1,105 @@
-"""Slide "Transformer / GPT": attention as a fan of lines, plus the GPT acronym spelled out.
+"""Slide "2017 the architecture, 2018 the first GPT": milestone band, attention demo and GPT spelled
+out, tied together by the two year tags.
 
-Placed right after the GenAI/LLM slide. Re-running replaces the slide.
+The attention demo follows a decoder-only model: "it" attends only to the words before it; the words
+after it are dimmed. Placed after the Generative AI slide; re-running replaces the slide.
 """
 import design as d
 
 MARKER = "slide-transformer"
 ANCHOR = "From recognizing content to creating it"  # GenAI/LLM slide
 
-# Sentence for the attention demo: (word, attention weight from "it"). Illustrative weights.
-WORDS = [("The", 0.5), ("cat", 4.5), ("sat", 1.0), ("on", 0.5), ("the", 0.5), ("mat", 1.5),
-         ("because", 0.75), ("it", None), ("was", 1.0), ("tired", 2.0)]
+# Sentence for the attention demo (wording and weights as set by the user in PowerPoint).
+# kind: "mint"/"teal"/"dim" = attended with that colour, "self" = "it" attending to itself,
+# None = comes after "it", so a text generator cannot see it yet.
+WORDS = [("The", "dim"), ("cat", "mint"), ("sat", "teal"), ("because", "dim"), ("it", "self"),
+         ("was", None), ("tired", None)]
+LINE_COLOR = {"mint": "MINT", "teal": "TEAL", "dim": "DIM_ON_DARK", "self": "DIM_ON_DARK"}
 
 GPT = [
-    ("G", "Generative", "Creates new text, not just labels or scores."),
-    ("P", "Pre-trained", "First learned from huge amounts of text, before anyone uses it."),
-    ("T", "Transformer", "Built on the attention design shown above."),
+    ("G", "enerative", "Creates new text, not just labels or scores."),
+    ("P", "re-trained", "Learn from huge amounts of text, before anyone uses it."),
+    ("T", "ransformer", "Built on the transformer architecture."),
 ]
 
 
 def build(prs):
     d.replace_slide(prs, MARKER)
     s = d.content_slide(
-        prs, "Generative AI · 2017–2018", "The engine inside every LLM: the Transformer",
-        "A 2017 neural-network design from Google. Nearly every language model today is built on it.",
+        prs, "Generative AI · 2017–2018", "The engine for every LLM: Transformer Architecture",
+        "A 2017 published neural-network architecture from Google lead to the first GPT model "
+        "in 2018.",
         index=d.index_after(prs, ANCHOR), marker=MARKER)
 
-    # --- Attention demo -------------------------------------------------------------------------
-    d.card(s, d.LEFT, 1.95, d.CONTENT_W, 1.78)
-    d.label(s, "Attention · how a Transformer reads a sentence", 0.85, 2.07, w=6)
+    left_x, left_w = d.LEFT, 4.38                     # the 2017 column
+    right_x = left_x + left_w + 0.14                  # the 2018 column
+    right_w = d.LEFT + d.CONTENT_W - right_x
 
-    row_y, node_y = 2.4, 3.28
-    x, centers = 0.85, {}
-    for word, _ in WORDS:
-        w = 0.16 + 0.1 * len(word)
-        if word == "it":
-            d.chip(s, word, x, row_y, w, fill=d.NAVY, color=d.WHITE)
-        elif word == "cat":
-            d.chip(s, word, x, row_y, w, fill=d.MINT, color=d.NAVY)
+    # --- Two columns, each headed by its milestone ------------------------------------------------
+    for x, w, accent, label, text in (
+            (left_x, left_w, d.MINT, "2017 · Google",
+             "“Attention Is All You Need” introduces Transformer Architecture."),
+            (right_x, right_w, d.NAVY, "2018 · OpenAI",
+             "GPT-1: the first Generative Pre-trained Transformer.")):
+        d.card(s, x, 1.95, w, 3.0, accent=accent)
+        d.label(s, label, x + 0.23, 2.1, w=2.5, color=accent)
+        d.text(s, text, x + 0.23, 2.46, w - 0.23, 0.17, size=10, color=d.TEXT_DARK)
+
+    # --- Left column: what the 2017 architecture does ---------------------------------------------
+    d.label(s, "Attention: the core idea", left_x + 0.23, 2.88, w=3.0)
+
+    row_y, node_y = 3.16, 3.70
+    x, centers, attended = left_x + 0.23, {}, []
+    for word, kind in WORDS:
+        w = 0.12 + 0.09 * len(word)
+        if kind == "self":
+            d.chip(s, word, x, row_y, w, h=0.3, size=10, fill=d.NAVY, color=d.WHITE)
+        elif kind is None:                     # not visible to "it" yet
+            d.chip(s, word, x, row_y, w, h=0.3, size=10, fill=d.LIGHT_BG, color=d.DIM_ON_DARK,
+                   line=d.BORDER)
         else:
-            d.chip(s, word, x, row_y, w, fill=d.TEAL_TINT, color=d.NAVY)
+            fill = d.MINT if kind == "mint" else d.TEAL_TINT
+            d.chip(s, word, x, row_y, w, h=0.3, size=10, fill=fill, color=d.NAVY)
+            attended.append(word)
         centers[word] = x + w / 2
-        x += w + 0.08
+        x += w + 0.06
 
-    # "it" asks the question; every other word answers with a line whose thickness = attention.
-    node_x = (centers["The"] + centers["tired"]) / 2
-    for word, weight in WORDS:
-        if weight is None:
+    # The question node sits under the words before "it"; "it" also attends to itself.
+    node_x = (centers[attended[0]] + centers[attended[-1]]) / 2
+    for word, kind in WORDS:
+        if kind is None:
             continue
-        color = d.MINT if word == "cat" else (d.TEAL if weight >= 1.5 else d.DIM_ON_DARK)
-        d.line(s, node_x, node_y, centers[word], row_y + 0.34, color=color, width=weight * 1.4)
-    d.chip(s, "“it” = ?", node_x - 0.45, node_y, 0.9, h=0.32, fill=d.NAVY, color=d.WHITE, size=10)
+        d.line(s, node_x, node_y, centers[word], row_y + 0.3, color=getattr(d, LINE_COLOR[kind]),
+               width=1.5 if kind == "mint" else 0.75)
+    d.chip(s, "“it” = ?", node_x - 0.42, node_y, 0.84, h=0.3, fill=d.NAVY, color=d.WHITE, size=9.5)
 
-    d.text(s, "To understand “it”, the model weighs every other word, and “cat” matters most.",
-           6.85, 2.38, 2.45, 0.7, size=11, color=d.TEXT_DARK)
-    d.text(s, "Thicker line = more attention. This is what made Transformers so good at language.",
-           6.85, 2.98, 2.45, 0.7, size=11, color=d.MUTED)
+    d.text(s, "The model perceives “it” as a weighted combination of itself and all of the words "
+              "before it. A thicker line means more attention, so the word “cat” matters most for "
+              "the word “it” — the mechanism that made Transformers so good at language.",
+           left_x + 0.23, 4.12, left_w - 0.45, 0.64, size=9.5, color=d.TEXT_DARK)
 
-    # --- GPT spelled out ------------------------------------------------------------------------
-    gap, top, h = 0.15, 3.9, 1.42
-    w = (d.CONTENT_W - 3 * gap) / 4
-    for i, (letter, name, desc) in enumerate(GPT):
-        x = d.LEFT + i * (w + gap)
-        d.card(s, x, top, w, h)
-        d.text(s, letter, x + 0.22, top + 0.08, 0.5, 0.5, font=d.HEADLINE, size=26, color=d.TEAL)
-        d.text(s, name, x + 0.62, top + 0.2, w - 0.7, 0.3, font=d.HEADLINE, size=15, color=d.NAVY)
-        d.text(s, desc, x + 0.22, top + 0.62, w - 0.38, 0.65, size=10.5, color=d.MUTED)
+    # --- Right column: GPT spelled out, one card per letter ---------------------------------------
+    h, gap = 0.53, 0.14
+    for i, (letter, rest, desc) in enumerate(GPT):
+        top = 2.84 + i * (h + gap)
+        d.rect(s, right_x + 0.23, top, right_w - 0.46, h, fill=d.LIGHT_BG, radius=0.07)
+        d.rect(s, right_x + 0.23, top, 0.04, h, fill=d.TEAL)          # thin accent edge
+        d.rect(s, right_x + 0.37, top + 0.09, 0.35, 0.35, fill=d.WHITE, radius=0.07)
+        d.text(s, letter, right_x + 0.37, top + 0.09, 0.35, 0.33, font=d.HEADLINE, size=19,
+               color=d.TEAL, align=d.PP_ALIGN.CENTER, anchor=d.MSO_ANCHOR.MIDDLE)
+        d.rich_text(s, [(letter + rest, d.NAVY)], right_x + 0.84, top + 0.07, 2.4, 0.22,
+                    font=d.HEADLINE, size=12)
+        d.text(s, desc, right_x + 0.84, top + 0.28, right_w - 1.2, 0.2, size=9, color=d.MUTED)
 
-    x = d.LEFT + 3 * (w + gap)
-    d.rect(s, x, top, w, h, fill=d.NAVY)
-    d.text(s, "GPT", x + 0.22, top + 0.08, 1.0, 0.5, font=d.HEADLINE, size=26, color=d.MINT)
-    d.text(s, "OpenAI's models behind ChatGPT. Claude, Gemini and Llama are Transformers too.", x + 0.22, top + 0.62, w - 0.38, 0.65, size=10.5,
-           color=d.SOFT_ON_DARK)
+    # One timeline across both columns, drawn last so it runs over the cards and the gap between
+    # them instead of being cut by the column accent bars.
+    d.line(s, left_x + 0.23, 2.36, d.LEFT + d.CONTENT_W - 0.23, 2.36, color=d.BORDER, width=1.5)
+    for dot_x, accent in ((left_x + 0.27, d.MINT), (right_x + 0.27, d.NAVY)):
+        d.circle(s, dot_x, 2.29, 0.14, color=accent, alpha=100, line_width=0.75)
+
+    d.rect(s, d.LEFT, 5.07, 0.05, 0.24, fill=d.TEAL)
+    d.text(s, "Nearly every language model today is built on this architecture — ChatGPT, Claude, "
+              "Gemini, Llama and more.", 0.78, 5.05, 8.74, 0.2, size=12, color=d.NAVY)
     return s
 
 

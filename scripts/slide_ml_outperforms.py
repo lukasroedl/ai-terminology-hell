@@ -6,8 +6,8 @@ import design as d
 
 MARKER = "slide-ml-outperforms"
 ANCHOR = "slide-machine-learning"
-STATEMENT = ("Both streams ran side by side. Learning took the lead from the 1990s, as data and "
-             "computing power grew.")
+STATEMENT = ("Both streams ran side by side. Machine Learning took the lead from the 1990s, as "
+             "data and computing power grew.")
 
 
 def build(prs):
