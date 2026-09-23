@@ -135,7 +135,8 @@ def index_after(prs, needle):
     raise SystemExit(f"Anchor slide '{needle}' not found")
 
 
-def content_slide(prs, kicker_text, headline, subtitle=None, index=None, marker=None):
+def content_slide(prs, kicker_text, headline, subtitle=None, index=None, marker=None,
+                  subtitle_size=14):
     """Light content slide: navy side bar, teal kicker, Oswald headline, optional Roboto subtitle.
     The headline shape is named `marker` so a slide script can find and replace its slide."""
     s = new_slide(prs, background=LIGHT_BG, index=index)
@@ -145,11 +146,12 @@ def content_slide(prs, kicker_text, headline, subtitle=None, index=None, marker=
     if marker:
         h.name = marker
     if subtitle:
-        text(s, subtitle, LEFT, 1.42, CONTENT_W, 0.5, size=14, color=TEXT_DARK)
+        text(s, subtitle, LEFT, 1.42, CONTENT_W, 0.5, size=subtitle_size, color=TEXT_DARK)
     return s
 
 
-def rect(slide, x, y, w, h, fill=None, line=None, rounded=False, line_width=0.75, radius=None):
+def rect(slide, x, y, w, h, fill=None, line=None, rounded=False, line_width=0.75, radius=None,
+         rotation=0):
     """Rectangle in inches. `rounded` uses a relative corner (18% of the short side); `radius` sets a
     fixed corner radius in inches instead."""
     rounded = rounded or radius is not None
@@ -168,6 +170,7 @@ def rect(slide, x, y, w, h, fill=None, line=None, rounded=False, line_width=0.75
         shape.line.color.rgb = line
         shape.line.width = Pt(line_width)
     shape.shadow.inherit = False
+    shape.rotation = rotation
     return shape
 
 
@@ -215,10 +218,10 @@ def line(slide, x1, y1, x2, y2, color=TEAL, width=1.25, arrow=False, dashed=Fals
     return c
 
 
-def takeaway(slide, value, y=5.02):
+def takeaway(slide, value, y=5.02, size=12, h=0.3):
     """Bottom takeaway line with a teal marker bar (as on the deck's content slides)."""
-    rect(slide, LEFT, y + 0.02, 0.05, 0.24, fill=TEAL)
-    text(slide, value, LEFT + 0.16, y, CONTENT_W - 0.16, 0.3, size=12, color=NAVY)
+    rect(slide, LEFT, y + 0.02, 0.05, h - 0.06, fill=TEAL)
+    text(slide, value, LEFT + 0.16, y, CONTENT_W - 0.16, h, size=size, color=NAVY)
 
 
 def run(build, default_deck="ai-terminology-hell.pptx"):
@@ -315,3 +318,12 @@ def svg_picture(slide, svg_path, x, y, w, h):
         f'<a:ext cx="{Inches(w)}" cy="{Inches(h)}"/></a:xfrm>'
         '<a:prstGeom prst="rect"><a:avLst/></a:prstGeom></p:spPr></p:pic>')
     slide.shapes._spTree.append(parse_xml(xml))
+
+
+def send_to_back(slide, *shapes):
+    """Move shapes to the back of the drawing order (as PowerPoint's "send to back" does)."""
+    tree = slide.shapes._spTree
+    for i, shape in enumerate(shapes):
+        el = shape._element
+        tree.remove(el)
+        tree.insert(2 + i, el)          # after nvGrpSpPr and grpSpPr

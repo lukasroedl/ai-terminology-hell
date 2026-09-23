@@ -9,7 +9,7 @@ import design as d
 MARKER = "slide-llm-terms-divider"
 ANCHOR = "slide-pretraining"   # after the mechanics block, before the practical terms
 
-TERMS = ["Prompt", "Context window", "Hallucination"]
+TERMS = ["Vocabulary & embeddings", "Prompt", "Context window", "Hallucination"]
 
 
 def build(prs):

@@ -27,7 +27,7 @@ def build(prs):
         index=d.index_after(prs, ANCHOR), marker=MARKER)
 
     # --- Top: conversation strip with the window ---------------------------------------------------
-    d.card(s, d.LEFT, 1.95, d.CONTENT_W, 1.72)
+    d.card(s, d.LEFT, 1.95, d.CONTENT_W, 1.78)
     d.label(s, "A long conversation", 0.85, 2.08)
     x, y, h, gap = 0.95, 2.5, 0.48, 0.07
     window_x = None
@@ -44,11 +44,19 @@ def build(prs):
     window_end = x - gap
     d.rect(s, window_x - 0.08, y - 0.1, window_end - window_x + 0.16, h + 0.2, line=d.MINT,
            line_width=2.25, rounded=True)
-    d.label(s, "Context window · what the model sees", window_x - 0.08, 2.08, w=4.5, color=d.NAVY)
+    d.text(s, "CONTEXT WINDOW = HOW MUCH THE MODEL CAN TAKE INTO ACCOUNT AT ONCE",
+           window_x - 0.08, 2.19, 5.39, 0.15, font=d.MONO, size=9, color=d.NAVY, spacing=100)
 
-    d.line(s, window_x - 0.25, 3.3, 1.0, 3.3, color=d.DIM_ON_DARK, width=1, arrow=True)
+    # Time axis under the conversation: it runs left to right, the window sits at its end.
+    axis_y = 3.18
+    d.line(s, 0.95, axis_y, window_end + 0.1, axis_y, color=d.DIM_ON_DARK, width=1, arrow=True)
+    for tick in (0.95, window_end + 0.1):        # only the two ends carry a tick (user edit)
+        d.line(s, tick, axis_y - 0.05, tick, axis_y + 0.05, color=d.DIM_ON_DARK, width=1)
+    d.text(s, "start of the conversation", 0.95, axis_y + 0.1, 0.75, 0.3, size=9, color=d.MUTED)
+    d.text(s, "now", window_end - 0.7, axis_y + 0.1, 0.8, 0.2, size=9, color=d.MUTED,
+           align=d.PP_ALIGN.RIGHT)
     d.text(s, "When the window is full, the oldest parts are dropped or shortened.",
-           window_x + 0.05, 3.18, 5.0, 0.3, size=10.5, color=d.MUTED)
+           2.57, axis_y + 0.3, 5.0, 0.3, size=10.5, color=d.MUTED)
 
     # --- Bottom: how big are windows? -----------------------------------------------------------
     d.card(s, d.LEFT, 3.82, d.CONTENT_W, 1.14)

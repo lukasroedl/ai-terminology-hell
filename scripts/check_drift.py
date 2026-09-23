@@ -57,8 +57,9 @@ def describe(sh):
     geo = [Emu(v).inches for v in (sh.left, sh.top, sh.width, sh.height)]
     geo.append(round(sh.rotation, 1) / 100)        # rotation, scaled into the same tolerance
     colors = shape_colors(sh)
-    try:                                   # line width, so thickness changes count as drift too
-        colors += (round(sh.line.width.pt, 2) if sh.line.width else None,)
+    try:                                   # line width, but only where an outline is visible
+        width = round(sh.line.width.pt, 2) if sh.line.width else None
+        colors += (width if colors[1] else None,)
     except Exception:
         pass
     if sh.has_text_frame:
@@ -76,11 +77,23 @@ def describe(sh):
     return str(sh.shape_type), geo, text, sizes, colors
 
 
+def sort_key(sh):
+    """Identify a shape by what it is, not by its position in the z-order."""
+    kind, geo, text, sizes, colors = describe(sh)
+    return (text, kind, round(geo[0], 2), round(geo[1], 2), round(geo[2], 2), round(geo[3], 2))
+
+
 def compare(a, b):
     diffs = []
     sa, sb = list(a.shapes), list(b.shapes)
     if len(sa) != len(sb):
         diffs.append(f"shape count: deck {len(sa)} vs script {len(sb)}")
+    # Match shapes by content, so a changed z-order does not look like a changed slide.
+    if [sort_key(sh) for sh in sa] != [sort_key(sh) for sh in sb]:
+        ka, kb = sorted(sa, key=sort_key), sorted(sb, key=sort_key)
+        if [sort_key(sh) for sh in ka] == [sort_key(sh) for sh in kb]:
+            diffs.append("z-order differs (same shapes, drawn in a different order)")
+        sa, sb = ka, kb
     for i, (x, y) in enumerate(zip(sa, sb)):
         tx, gx, textx, szx, cx = describe(x)
         ty, gy, texty, szy, cy = describe(y)

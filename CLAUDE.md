@@ -26,7 +26,7 @@ A **corporate audience with no IT background** (context: Merck KGaA, Darmstadt, 
 The deck tells **the story of how AI evolved**. Each concept and abbreviation is introduced **at the point in the
 story where it appeared**, so the terms are learned alongside the history and not as a separate glossary.
 
-Current arc (34 slides):
+Current arc (35 slides):
 1. Title
 2. **Terminology hell**: a deliberately chaotic cloud of every term the deck explains (`scripts/slide_terminology_hell.py`)
 3. Five nested ideas: AI → ML → Deep Learning → GenAI → Agentic AI. Years: AI 1955 (term coined), ML 1959 (Samuel), DL 2012 (AlexNet), GenAI 2018, Agentic AI 2024 (`scripts/edit_foundations_dates.py`)
@@ -42,25 +42,26 @@ Current arc (34 slides):
 13. **Generative AI**: recognise (label in) vs. generate (new content), and the branches text/LLM · images · audio · video (`scripts/slide_generative_ai.py`)
 14. **Transformer / GPT**: milestone band 2017 Google → 2018 OpenAI, decoder-only attention demo ("it" only looks back), GPT spelled out (`scripts/slide_transformer.py`)
 15. **Token**: text → tokens → numbers (`scripts/slide_token.py`)
-16. Next-word prediction
+16. **Next-word prediction**: two generation steps with the same probability picture; the chosen token is boxed and carried into step 2 (`scripts/slide_next_word.py`)
 17. **Pre-training**: any text → next-token guessing staircase → learning loop (loss, gradients, adjust weights) (`scripts/slide_pretraining.py`)
-18. *Sub-divider · "Terms you meet when working with LLMs": Prompt · Context window · Hallucination (`scripts/slide_llm_terms_divider.py`)*
-19. **Prompt**: anatomy of a good prompt → LLM → answer (`scripts/slide_prompt.py`)
-20. **Context window**: conversation strip with the window, how big windows got (`scripts/slide_context_window.py`)
-21. **Hallucination**: invented-study chat example, why it happens, what helps (`scripts/slide_hallucination.py`)
-22. *Section divider · Part 5: Agentic AI*
-23. Chatbot vs. agent
-24. What an agent is made of (model + instructions + tools + runtime)
-25. Bridge slide: from foundations to mechanics
-26. Why a model alone is not enough
-27. Timeline: RAG → tool use → agents → MCP
-28. RAG
-29. Tool use (and which name to use for it)
-30. MCP: the integration problem
-31. The four-layer stack
-32. MCP architecture (host / client / server)
-33. The hard part: constraining the loop
-34. Sources
+18. *Sub-divider · "Terms you meet when working with LLMs": Vocabulary & embeddings · Prompt · Context window · Hallucination (`scripts/slide_llm_terms_divider.py`)*
+19. **Vocabulary, token, embedding**: the model's vocabulary table (ID · token · embedding) plus the three definitions (`scripts/slide_vocabulary.py`)
+20. **Prompt**: the prompt inside a chat input field (parts marked by shading, attachment chip) → LLM → answer, horizontal flow; takeaway names the hidden parts (system prompt, history, attachments) (`scripts/slide_prompt.py`)
+21. **Context window**: conversation strip with the window, how big windows got (`scripts/slide_context_window.py`)
+22. **Hallucination**: chat app window (request → invented guideline → reality check), why it happens, what helps (`scripts/slide_hallucination.py`)
+23. *Section divider · Part 5: Agentic AI*
+24. Chatbot vs. agent
+25. What an agent is made of (model + instructions + tools + runtime)
+26. Bridge slide: from foundations to mechanics
+27. Why a model alone is not enough
+28. Timeline: RAG → tool use → agents → MCP
+29. RAG
+30. Tool use (and which name to use for it)
+31. MCP: the integration problem
+32. The four-layer stack
+33. MCP architecture (host / client / server)
+34. The hard part: constraining the loop
+35. Sources
 
 The five parts are Rule-based AI, Machine Learning, Deep Learning, Generative AI and Agentic AI. The AI divider
 before them only orients the audience. All dividers (`scripts/slide_sections.py`) show a family tree
@@ -137,12 +138,12 @@ tokens in and out) is the reference example. Every concept should have a picture
 - Title and section/bridge slides: navy background. Content slides: `#F4F7F8` light background.
 
 ## Known issues in the current deck (fix when touching those slides)
-- Slides **17, 32** use off-system fonts (Arial, Bahnschrift Condensed, Consolas, Courier New). Change
+- Slide **33** (MCP architecture) uses off-system fonts (Arial, Courier New). Change
   them to Oswald / Roboto / JetBrains Mono. Some also lack the explicit slide background.
-- Slide 27: headline "Evolution of Agentic" looks truncated.
-- Slides 28–33 are written for a technical audience ("parametric memory", "top-k", "M×N connectors", "LSP",
+- Slide 28: headline "Evolution of Agentic" looks truncated.
+- Slides 29–34 are written for a technical audience ("parametric memory", "top-k", "M×N connectors", "LSP",
   "control layer"). Rewrite them for non-IT readers.
-- Slide 33 contains a note about Claude's knowledge cutoff. This is an authoring note and must not appear on a slide.
+- Slide 34 contains a note about Claude's knowledge cutoff. This is an authoring note and must not appear on a slide.
 - If a term is added to or removed from the deck, update the term cloud on slide 2 (`TERMS` in
   `scripts/slide_terminology_hell.py`). Every term in the cloud must be explained somewhere.
 
@@ -174,6 +175,8 @@ tokens in and out) is the reference example. Every concept should have a picture
   asking.
 - Images the user inserts (e.g. PowerPoint stock icons, which are SVGs) are extracted to `assets/` and
   re-inserted by the slide script with `d.svg_picture(...)`, so a rebuild keeps them.
+- `check_drift.py` matches shapes by content, so a changed z-order is reported as one line instead of a
+  long diff. Reproduce the user's drawing order with `d.send_to_back(...)` or by creating shapes later.
 - **Slides are built by scripts:** `scripts/design.py` holds the design system (colors, fonts, `new_slide`,
   `kicker`, `text`, `accent_bar`, `circle`), and each new or rebuilt slide has its own
   `scripts/slide_<name>.py`. A slide script replaces its previous version when re-run (it finds the slide by a
