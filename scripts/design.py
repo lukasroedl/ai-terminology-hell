@@ -19,6 +19,7 @@ MUTED = RGBColor(0x6B, 0x7B, 0x8C)
 SOFT_ON_DARK = RGBColor(0xAF, 0xC2, 0xCE)
 DIM_ON_DARK = RGBColor(0x8F, 0xA6, 0xB2)  # secondary text on navy, still readable over circles
 WHITE = RGBColor(0xFF, 0xFF, 0xFF)
+ICON_TEAL = RGBColor(0x1B, 0x9A, 0xAA)   # matches the stock AI icon
 TEAL_TINT = RGBColor(0xD4, 0xEC, 0xEF)  # light fills for chips/boxes on light slides
 MINT_TINT = RGBColor(0xCF, 0xF5, 0xEA)
 

@@ -50,8 +50,8 @@ Current arc (35 slides):
 21. **Context window**: conversation strip with the window, how big windows got (`scripts/slide_context_window.py`)
 22. **Hallucination**: chat app window (request → invented guideline → reality check), why it happens, what helps (`scripts/slide_hallucination.py`)
 23. *Section divider · Part 5: Agentic AI*
-24. Chatbot vs. agent
-25. What an agent is made of (model + instructions + tools + runtime)
+24. **Chatbot vs. agent**: turn-by-turn exchange vs. the agent loop, both in cards (`scripts/slide_chatbot_vs_agent.py`)
+25. **What an agent is made of**: formula Agent = Model + Instructions + Tools + Runtime, four cards, OpenAI definition (`scripts/slide_agent_anatomy.py`)
 26. Bridge slide: from foundations to mechanics
 27. Why a model alone is not enough
 28. Timeline: RAG → tool use → agents → MCP
@@ -136,6 +136,27 @@ tokens in and out) is the reference example. Every concept should have a picture
 ### Format
 - 16:9, slide size 9144000 × 5143500 EMU (10 × 5.625 in).
 - Title and section/bridge slides: navy background. Content slides: `#F4F7F8` light background.
+
+## Where the work stands (2026-09-24)
+
+Slides 1–25 have been reworked and are built by scripts (except slide 3, which is edited in place).
+**Slides 26–35 are still the original hand-made ones** and are the remaining work:
+
+| Slide | Content | What it needs |
+|---|---|---|
+| 26 | Bridge "So how does a model get hands and eyes?" | Restyle only; content is fine |
+| 27 | Why a model alone is not enough | Plain language ("parametric memory" → plain), card layout |
+| 28 | Timeline RAG → tool use → agents → MCP | Truncated headline; rebuild as a timeline like slide 14 |
+| 29–31 | RAG · tool use · MCP | Written for a technical audience; needs plain language and a visual each |
+| 32 | The four-layer stack | Restyle |
+| 33 | MCP architecture (host/client/server) | Off-system fonts; rebuild |
+| 34 | The hard part: constraining the loop | Remove the authoring note; restyle |
+| 35 | Sources | Keep the intranet links unchanged |
+
+The recipe for reworking one: read the rendered slide, keep the content, rebuild it with
+`d.content_slide(...)` (kicker → headline → one-line subtitle), cards or a diagram in the deck's
+colours, and a takeaway line at the bottom; delete the original slide by a distinctive text of its
+own (see the `OLD_SLIDE` constant in `scripts/slide_next_word.py` for the pattern).
 
 ## Known issues in the current deck (fix when touching those slides)
 - Slide **33** (MCP architecture) uses off-system fonts (Arial, Courier New). Change
