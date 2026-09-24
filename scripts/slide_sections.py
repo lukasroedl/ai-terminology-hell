@@ -34,7 +34,7 @@ SECTIONS = [
      "slide-neural-network"),
     ("agentic", "Part 5 of 5 · since 2024", "Agentic\nAI",
      "AI that doesn't just answer, but plans, uses tools and acts toward a goal.",
-     "Chatbot vs. agent · What an agent is made of · RAG · Tool use · MCP",
+     "Chatbot vs. agent · What an agent is made of · RAG · Tool use · How agents use tools · MCP",
      "slide-hallucination"),
 ]
 

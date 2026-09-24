@@ -83,10 +83,12 @@ def build(prs):
 
 
 if __name__ == "__main__":
-    prs = __import__("pptx").Presentation("ai-terminology-hell.pptx")
+    import sys
+    deck = sys.argv[1] if len(sys.argv) > 1 else "ai-terminology-hell.pptx"
+    prs = __import__("pptx").Presentation(deck)
     for slide in list(prs.slides):          # drop the original hand-made slide once
         if any(sh.has_text_frame and OLD_SLIDE in sh.text_frame.text for sh in slide.shapes):
             d.delete_slide(prs, slide)
     build(prs)
-    prs.save("ai-terminology-hell.pptx")
+    prs.save(deck)
     print("Next-word slide rebuilt")

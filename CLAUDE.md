@@ -26,7 +26,7 @@ A **corporate audience with no IT background** (context: Merck KGaA, Darmstadt, 
 The deck tells **the story of how AI evolved**. Each concept and abbreviation is introduced **at the point in the
 story where it appeared**, so the terms are learned alongside the history and not as a separate glossary.
 
-Current arc (35 slides):
+Current arc (37 slides):
 1. Title
 2. **Terminology hell**: a deliberately chaotic cloud of every term the deck explains (`scripts/slide_terminology_hell.py`)
 3. Five nested ideas: AI → ML → Deep Learning → GenAI → Agentic AI. Years: AI 1955 (term coined), ML 1959 (Samuel), DL 2012 (AlexNet), GenAI 2018, Agentic AI 2024 (`scripts/edit_foundations_dates.py`)
@@ -52,16 +52,18 @@ Current arc (35 slides):
 23. *Section divider · Part 5: Agentic AI*
 24. **Chatbot vs. agent**: turn-by-turn exchange vs. the agent loop, both in cards (`scripts/slide_chatbot_vs_agent.py`)
 25. **What an agent is made of**: formula Agent = Model + Instructions + Tools + Runtime, four cards, OpenAI definition (`scripts/slide_agent_anatomy.py`)
-26. Bridge slide: from foundations to mechanics
-27. Why a model alone is not enough
-28. Timeline: RAG → tool use → agents → MCP
-29. RAG
-30. Tool use (and which name to use for it)
-31. MCP: the integration problem
-32. The four-layer stack
-33. MCP architecture (host / client / server)
-34. The hard part: constraining the loop
-35. Sources
+26. **Bridge question**: "how do we get from predicting the next token to an agent that works in Outlook?", light statement slide with the four missing pieces (`scripts/slide_bridge_question.py`)
+27. **A model alone can only talk**: knowledge learned in training and frozen in the weights; four gaps in cards, each tagged "solved by" RAG / tool use (`scripts/slide_model_alone.py`)
+28. **Timeline from RAG to MCP**: milestone band 2020 RAG → 2021–2023 tool use → 2023–2024 agents → Nov 2024 MCP, each tagged with the bridge question's missing piece it fills (`scripts/slide_agentic_timeline.py`)
+29. **RAG**: search → add to prompt → answer flow with a toy question, why it helps / where it stops, open-book analogy, footnote on vector databases (`scripts/slide_rag.py`)
+30. **Tool use**: RAG's fixed route vs. the model choosing a tool; "tool use / tool calling / function calling" are one idea (`scripts/slide_tool_use.py`)
+31. **How an agent uses a tool**: four steps (tool list → tool call → the app runs the tool → next step) with the loop back; the model only writes text, the app executes (`scripts/slide_tool_calling.py`)
+32. **MCP**: before (every app wired to every system) vs. after (everyone plugs into MCP), USB-C analogy (`scripts/slide_mcp.py`)
+33. **Inside MCP**: host / client / server diagram (Outlook server local or in the cloud, files server on your computer) plus one card per role: what the client does, what a server offers and where it runs (`scripts/slide_mcp_architecture.py`)
+34. **How the pieces fit together**: stack named like the parts on slide 25 (runtime = the agent loop · tools = RAG & tool use · MCP · model = the LLM), each mapped to what it adds (`scripts/slide_agent_stack.py`)
+35. **The hard part** (navy statement): connecting a tool is easy, keeping the loop in check is not; four guardrails, the signature circle drawn as the agent loop (`scripts/slide_hard_part.py`)
+36. **Closing quote** (navy): Richard Feynman, "I learned very early the difference between knowing the name of something and knowing something." (`scripts/slide_closing_quote.py`)
+37. **Sources**: three intranet resources, linked titles and URLs (`scripts/slide_sources.py`)
 
 The five parts are Rule-based AI, Machine Learning, Deep Learning, Generative AI and Agentic AI. The AI divider
 before them only orients the audience. All dividers (`scripts/slide_sections.py`) show a family tree
@@ -126,7 +128,7 @@ tokens in and out) is the reference example. Every concept should have a picture
 - Diagrams built from native PowerPoint shapes (ellipses, lines, arrows, rectangles) in the palette. Don't use
   stock images or clip art.
 - Flows (left → right), nested sets, timelines, before/after comparisons, simple toy examples (e.g. the next-word
-  probability bars on slide 17).
+  probability bars on slide 16).
 - **Numbered steps** are labelled "STEP 1: TEXT" (`d.step_label`), never "1 / text". When several steps share one
   card, give each step its own light box (`d.step_box`: light background, thin border, small fixed corner radius).
   Sub-steps inside a step use letters (a, b, c) so they don't clash with the step numbers.
@@ -139,32 +141,16 @@ tokens in and out) is the reference example. Every concept should have a picture
 
 ## Where the work stands (2026-09-24)
 
-Slides 1–25 have been reworked and are built by scripts (except slide 3, which is edited in place).
-**Slides 26–35 are still the original hand-made ones** and are the remaining work:
+All 37 slides have been reworked and are built by scripts (except slide 3, which is edited in place).
+Part 5 follows the four missing pieces named on the bridge question (knowledge → RAG, hands → tool
+use, one common plug → MCP, a loop kept in check → the hard part); keep that thread when editing it.
 
-| Slide | Content | What it needs |
-|---|---|---|
-| 26 | Bridge "So how does a model get hands and eyes?" | Restyle only; content is fine |
-| 27 | Why a model alone is not enough | Plain language ("parametric memory" → plain), card layout |
-| 28 | Timeline RAG → tool use → agents → MCP | Truncated headline; rebuild as a timeline like slide 14 |
-| 29–31 | RAG · tool use · MCP | Written for a technical audience; needs plain language and a visual each |
-| 32 | The four-layer stack | Restyle |
-| 33 | MCP architecture (host/client/server) | Off-system fonts; rebuild |
-| 34 | The hard part: constraining the loop | Remove the authoring note; restyle |
-| 35 | Sources | Keep the intranet links unchanged |
+To rework or add a slide: build it with `d.content_slide(...)` (kicker → headline → one-line
+subtitle), cards or a diagram in the deck's colours, and a takeaway line at the bottom. When it
+replaces a hand-made slide, delete the original by a distinctive text of its own
+(`d.delete_slides_with_text(prs, OLD_SLIDE)`).
 
-The recipe for reworking one: read the rendered slide, keep the content, rebuild it with
-`d.content_slide(...)` (kicker → headline → one-line subtitle), cards or a diagram in the deck's
-colours, and a takeaway line at the bottom; delete the original slide by a distinctive text of its
-own (see the `OLD_SLIDE` constant in `scripts/slide_next_word.py` for the pattern).
-
-## Known issues in the current deck (fix when touching those slides)
-- Slide **33** (MCP architecture) uses off-system fonts (Arial, Courier New). Change
-  them to Oswald / Roboto / JetBrains Mono. Some also lack the explicit slide background.
-- Slide 28: headline "Evolution of Agentic" looks truncated.
-- Slides 29–34 are written for a technical audience ("parametric memory", "top-k", "M×N connectors", "LSP",
-  "control layer"). Rewrite them for non-IT readers.
-- Slide 34 contains a note about Claude's knowledge cutoff. This is an authoring note and must not appear on a slide.
+## Keeping the deck consistent
 - If a term is added to or removed from the deck, update the term cloud on slide 2 (`TERMS` in
   `scripts/slide_terminology_hell.py`). Every term in the cloud must be explained somewhere.
 

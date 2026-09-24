@@ -328,3 +328,26 @@ def send_to_back(slide, *shapes):
         el = shape._element
         tree.remove(el)
         tree.insert(2 + i, el)          # after nvGrpSpPr and grpSpPr
+
+
+def delete_slides_with_text(prs, needle):
+    """Delete every slide that contains `needle` in any text (drops an original hand-made slide)."""
+    for slide in list(prs.slides):
+        if any(sh.has_text_frame and needle in sh.text_frame.text for sh in slide.shapes):
+            delete_slide(prs, slide)
+
+
+def link(shape, url):
+    """Turn all runs of a text shape into a hyperlink to `url`. The link keeps the run's own colour
+    (PowerPoint's hlinkClr extension) instead of the theme's blue hyperlink colour."""
+    for p in shape.text_frame.paragraphs:
+        for r in p.runs:
+            r.hyperlink.address = url
+            click = r._r.rPr.find(qn("a:hlinkClick"))
+            ext_lst = click.makeelement(qn("a:extLst"), {})
+            ext = ext_lst.makeelement(qn("a:ext"), {"uri": "{A12FA001-AC4F-418D-AE19-62706E023703}"})
+            ext.append(click.makeelement(
+                "{http://schemas.microsoft.com/office/drawing/2018/hyperlinkcolor}hlinkClr",
+                {"val": "tx"}))
+            ext_lst.append(ext)
+            click.append(ext_lst)

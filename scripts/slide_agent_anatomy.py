@@ -15,7 +15,8 @@ PARTS = [
     ("Instructions", "Define the goals and behaviour that steer actions toward the intended "
                      "outcome."),
     ("Tools", "Extend capability beyond the model: browsing, calling APIs, operating software."),
-    ("Runtime", "Manages the execution loop — plan, act, observe, iterate toward the objective."),
+    ("Runtime", "Manages the execution loop — plan, act, observe, iterate toward the objective. "
+                "Apps like Claude or Microsoft Copilot provide it for you."),
 ]
 QUOTE = ("“An AI application consisting of a model equipped with instructions that guide its "
          "behavior, access to tools that extend its capabilities, encapsulated in a runtime with "
@@ -57,10 +58,12 @@ def build(prs):
 
 
 if __name__ == "__main__":
-    prs = __import__("pptx").Presentation("ai-terminology-hell.pptx")
+    import sys
+    deck = sys.argv[1] if len(sys.argv) > 1 else "ai-terminology-hell.pptx"
+    prs = __import__("pptx").Presentation(deck)
     for slide in list(prs.slides):          # drop the original hand-made slide once
         if any(sh.has_text_frame and OLD_SLIDE in sh.text_frame.text for sh in slide.shapes):
             d.delete_slide(prs, slide)
     build(prs)
-    prs.save("ai-terminology-hell.pptx")
+    prs.save(deck)
     print("Agent anatomy slide rebuilt")
