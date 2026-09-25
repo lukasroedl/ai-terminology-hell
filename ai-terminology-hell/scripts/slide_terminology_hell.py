@@ -8,7 +8,7 @@ from pptx import Presentation
 
 import design as d
 
-DECK = sys.argv[1] if len(sys.argv) > 1 else "ai-terminology-hell.pptx"
+DECK = sys.argv[1] if len(sys.argv) > 1 else d.DECK
 MARKER = "terminology-hell-title"  # shape name used to find this slide again
 POSITION = 1  # directly after the title slide
 

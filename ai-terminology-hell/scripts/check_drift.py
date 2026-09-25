@@ -1,6 +1,6 @@
 """Detect manual edits: does the deck still match what a slide script would build?
 
-Usage: .venv/bin/python scripts/check_drift.py scripts/slide_<name>.py [deck]
+Usage (from ai-terminology-hell/): ../.venv/bin/python scripts/check_drift.py scripts/slide_<name>.py [deck]
 
 Runs the slide script on a temporary copy of the deck and compares every script-built slide (slides that
 carry a marker shape named "slide-*", "section-*" or "terminology-hell-title") shape by shape: type,
@@ -15,6 +15,9 @@ import tempfile
 
 from pptx import Presentation
 from pptx.util import Emu
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import design as d  # noqa: E402  (default deck location)
 
 TOLERANCE = 0.02  # inches
 
@@ -114,7 +117,7 @@ def compare(a, b):
 
 def main():
     script = sys.argv[1]
-    deck = sys.argv[2] if len(sys.argv) > 2 else "ai-terminology-hell.pptx"
+    deck = sys.argv[2] if len(sys.argv) > 2 else d.DECK
     sys.path.insert(0, os.path.dirname(os.path.abspath(script)))
     spec = importlib.util.spec_from_file_location("slide_script", script)
     module = importlib.util.module_from_spec(spec)

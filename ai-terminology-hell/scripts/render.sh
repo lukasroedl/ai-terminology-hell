@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Render the deck to PNGs in .render/ for visual checks.
 # Uses the installed Microsoft PowerPoint (via AppleScript) to export a PDF, then
-# PyMuPDF from .venv to rasterize it -- no global tools needed.
+# PyMuPDF from the repo's shared .venv (one folder up) to rasterize it -- no global tools needed.
+# Deck paths given as argument are relative to the project folder (ai-terminology-hell/).
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
@@ -19,7 +20,7 @@ tell application "Microsoft PowerPoint"
 end tell
 EOF
 
-DECK="$DECK" .venv/bin/python - <<'EOF'
+DECK="$DECK" ../.venv/bin/python - <<'EOF'
 import os, sys
 import pymupdf
 from pptx import Presentation

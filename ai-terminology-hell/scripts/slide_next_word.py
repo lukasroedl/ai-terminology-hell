@@ -84,7 +84,7 @@ def build(prs):
 
 if __name__ == "__main__":
     import sys
-    deck = sys.argv[1] if len(sys.argv) > 1 else "ai-terminology-hell.pptx"
+    deck = sys.argv[1] if len(sys.argv) > 1 else d.DECK
     prs = __import__("pptx").Presentation(deck)
     for slide in list(prs.slides):          # drop the original hand-made slide once
         if any(sh.has_text_frame and OLD_SLIDE in sh.text_frame.text for sh in slide.shapes):

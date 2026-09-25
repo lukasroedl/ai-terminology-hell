@@ -2,11 +2,24 @@
 
 Shared colors, fonts and building blocks so every slide script produces the same look as slide 1.
 """
+from pathlib import Path
+
 from pptx.dml.color import RGBColor
 from pptx.enum.shapes import MSO_SHAPE
 from pptx.enum.text import MSO_ANCHOR, PP_ALIGN
 from pptx.oxml.ns import qn
 from pptx.util import Emu, Inches, Pt
+
+# Where the deck lives: the project folder (this file is in its scripts/ subfolder), so scripts
+# work no matter which folder they are started from.
+PROJECT = Path(__file__).resolve().parent.parent
+DECK = str(PROJECT / "ai-terminology-hell.pptx")
+
+
+def asset(path):
+    """A path inside the project folder (e.g. "assets/avatar-ai.svg"), resolved absolutely."""
+    return str(PROJECT / path)
+
 
 # Colors
 NAVY = RGBColor(0x0D, 0x1B, 0x2A)
@@ -225,7 +238,7 @@ def takeaway(slide, value, y=5.02, size=12, h=0.3):
     text(slide, value, LEFT + 0.16, y, CONTENT_W - 0.16, h, size=size, color=NAVY)
 
 
-def run(build, default_deck="ai-terminology-hell.pptx"):
+def run(build, default_deck=DECK):
     """Standard entry point for slide scripts: build into the deck given on the command line."""
     import sys
     from pptx import Presentation
@@ -301,7 +314,7 @@ def svg_picture(slide, svg_path, x, y, w, h):
     while PackURI(f"/ppt/media/svg{n}.svg") in used:
         n += 1
     part = Part(PackURI(f"/ppt/media/svg{n}.svg"), "image/svg+xml",
-                package=package, blob=open(svg_path, "rb").read())
+                package=package, blob=open(asset(svg_path), "rb").read())
     rId = slide.part.relate_to(part, RT.IMAGE)
 
     shape_id = max([sh.shape_id for sh in slide.shapes] or [1]) + 1
