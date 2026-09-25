@@ -1,6 +1,6 @@
 """Slide "How the pieces fit together": the terms of Part 5 as one stack, named like the parts on the
 agent anatomy slide (runtime = the agent loop, tools = RAG & tool use, MCP, model = the LLM), each
-mapped back to the piece it adds, which answers the bridge question.
+tagged with what it adds, which answers the bridge question.
 
 Replaces the original hand-made stack slide ("Four layers, one direction of travel") in plain
 language. Placed after the MCP architecture slide; re-running replaces the slide.
@@ -16,11 +16,11 @@ OLD_SLIDE = "Four layers, one direction"
 LAYERS = [
     ("Runtime", "the agent loop",
      "Follows the instructions: plans, uses tools, checks the result and repeats until the goal "
-     "is reached.", "A loop kept in check", d.MINT),
+     "is reached.", "Multi-step tasks", d.MINT),
     ("Tools", "RAG & tool use", "The eyes and hands: read your documents, act in your systems.",
-     "Knowledge · hands", d.TEAL),
+     "Knowledge · actions", d.TEAL),
     ("MCP", "the common plug", "Connects the tools to the app in one standard way.",
-     "One common plug", d.MUTED),
+     "One standard connection", d.MUTED),
     ("Model", "the LLM", "The base: understands your request and writes text, including tool "
      "calls.", "Next-token prediction", d.DIM_ON_DARK),
 ]

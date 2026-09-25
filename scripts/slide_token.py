@@ -60,8 +60,10 @@ def build(prs):
         x += 0.56
     d.text(s, "… hundreds more", x + 0.04, tops[3] + 0.31, 1.3, 0.22, size=9, color=d.MUTED)
 
-    d.text(s, "Embedding = Numbers the model actually computes with (what we feed into the neural "
-              "network).", 0.92, 4.7, 5.2, 0.22, size=9, color=d.MUTED)
+    note = d.text(s, "Embedding = Numbers the model actually computes with (what we feed into the "
+                     "neural network).", 0.92, 4.7, 5.2, 0.22, size=9, color=d.MUTED)
+    note.left, note.top, note.width, note.height = (d.Emu(713232), d.Emu(4319147), d.Emu(5010912),
+                                                    d.Emu(138499))          # user edit 2026-09-25
 
     # --- Right: rule of thumb + why it matters --------------------------------------------------
     x, w = 6.45, 3.07

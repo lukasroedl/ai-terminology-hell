@@ -29,7 +29,7 @@ story where it appeared**, so the terms are learned alongside the history and no
 Current arc (37 slides):
 1. Title
 2. **Terminology hell**: a deliberately chaotic cloud of every term the deck explains (`scripts/slide_terminology_hell.py`)
-3. Five nested ideas: AI → ML → Deep Learning → GenAI → Agentic AI. Years: AI 1955 (term coined), ML 1959 (Samuel), DL 2012 (AlexNet), GenAI 2018, Agentic AI 2024 (`scripts/edit_foundations_dates.py`)
+3. **Five nested ideas**: AI → ML → Deep Learning → GenAI → Agentic AI as nested signature circles, plus a vertical timeline. Years: AI 1955 (term coined), ML 1959 (Arthur Samuel), DL 2012 (AlexNet), GenAI 2018 (the first GPT), Agentic AI 2024 (`scripts/slide_foundations.py`)
 4. *Section divider · Artificial Intelligence (orientation only, no part number, no content)*
 5. *Section divider · Part 1: Rule-based AI*
 6. **Stream 1, explicit programming / rule-based AI** (also called symbolic AI): IF/ELSE spam flowchart, where rules break, famous examples (`scripts/slide_explicit_programming.py`)
@@ -50,17 +50,17 @@ Current arc (37 slides):
 21. **Context window**: conversation strip with the window, how big windows got (`scripts/slide_context_window.py`)
 22. **Hallucination**: chat app window (request → invented guideline → reality check), why it happens, what helps (`scripts/slide_hallucination.py`)
 23. *Section divider · Part 5: Agentic AI*
-24. **Chatbot vs. agent**: turn-by-turn exchange vs. the agent loop, both in cards (`scripts/slide_chatbot_vs_agent.py`)
+24. **Chatbot vs. agent**: two identical chat windows, turn-by-turn exchange vs. the agent loop (executed tasks collapsed) (`scripts/slide_chatbot_vs_agent.py`)
 25. **What an agent is made of**: formula Agent = Model + Instructions + Tools + Runtime, four cards, OpenAI definition (`scripts/slide_agent_anatomy.py`)
-26. **Bridge question**: "how do we get from predicting the next token to an agent that works in Outlook?", light statement slide with the four missing pieces (`scripts/slide_bridge_question.py`)
+26. **Bridge question**: "how do we get from predicting the next token to an agent that works in Outlook?", light statement slide, question only (`scripts/slide_bridge_question.py`)
 27. **A model alone can only talk**: knowledge learned in training and frozen in the weights; four gaps in cards, each tagged "solved by" RAG / tool use (`scripts/slide_model_alone.py`)
-28. **Timeline from RAG to MCP**: milestone band 2020 RAG → 2021–2023 tool use → 2023–2024 agents → Nov 2024 MCP, each tagged with the bridge question's missing piece it fills (`scripts/slide_agentic_timeline.py`)
+28. **Timeline from RAG to MCP**: milestone band 2020 RAG → 2021–2023 tool use → 2023–2024 agents → Nov 2024 MCP, each tagged "Solves" with the problems it solved; RAG and tool use point back to the gaps on slide 27 (`scripts/slide_agentic_timeline.py`)
 29. **RAG**: search → add to prompt → answer flow with a toy question, why it helps / where it stops, open-book analogy, footnote on vector databases (`scripts/slide_rag.py`)
 30. **Tool use**: RAG's fixed route vs. the model choosing a tool; "tool use / tool calling / function calling" are one idea (`scripts/slide_tool_use.py`)
 31. **How an agent uses a tool**: four steps (tool list → tool call → the app runs the tool → next step) with the loop back; the model only writes text, the app executes (`scripts/slide_tool_calling.py`)
 32. **MCP**: before (every app wired to every system) vs. after (everyone plugs into MCP), USB-C analogy (`scripts/slide_mcp.py`)
 33. **Inside MCP**: host / client / server diagram (Outlook server local or in the cloud, files server on your computer) plus one card per role: what the client does, what a server offers and where it runs (`scripts/slide_mcp_architecture.py`)
-34. **How the pieces fit together**: stack named like the parts on slide 25 (runtime = the agent loop · tools = RAG & tool use · MCP · model = the LLM), each mapped to what it adds (`scripts/slide_agent_stack.py`)
+34. **How the pieces fit together**: stack named like the parts on slide 25 (runtime = the agent loop · tools = RAG & tool use · MCP · model = the LLM), each tagged with what it adds (`scripts/slide_agent_stack.py`)
 35. **The hard part** (navy statement): connecting a tool is easy, keeping the loop in check is not; four guardrails, the signature circle drawn as the agent loop (`scripts/slide_hard_part.py`)
 36. **Closing quote** (navy): Richard Feynman, "I learned very early the difference between knowing the name of something and knowing something." (`scripts/slide_closing_quote.py`)
 37. **Sources**: three intranet resources, linked titles and URLs (`scripts/slide_sources.py`)
@@ -141,9 +141,11 @@ tokens in and out) is the reference example. Every concept should have a picture
 
 ## Where the work stands (2026-09-24)
 
-All 37 slides have been reworked and are built by scripts (except slide 3, which is edited in place).
-Part 5 follows the four missing pieces named on the bridge question (knowledge → RAG, hands → tool
-use, one common plug → MCP, a loop kept in check → the hard part); keep that thread when editing it.
+All 37 slides have been reworked and are built by scripts.
+Part 5's thread: slide 27 names the gaps of a model alone, and the timeline on slide 28 tags each
+step with the problems it solved, using the same words (RAG: the three knowledge gaps; tool use: "It
+cannot act"; agents: "It cannot do multi-step tasks"; MCP: "Every tool needs its own connection").
+Keep these texts in sync when editing either slide.
 
 To rework or add a slide: build it with `d.content_slide(...)` (kicker → headline → one-line
 subtitle), cards or a diagram in the deck's colours, and a takeaway line at the bottom. When it

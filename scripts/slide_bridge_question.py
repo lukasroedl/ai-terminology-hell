@@ -12,7 +12,6 @@ OLD_SLIDE = "get hands and eyes"
 
 QUESTION = ("Wait — how do we get from\npredicting the next token to an\n"
             "agent that operates Outlook?")          # user edit 2026-09-24
-PIECES = ["Knowledge it never learned", "Hands to act with", "One common plug", "A loop kept in check"]
 
 
 def build(prs):
@@ -27,14 +26,6 @@ def build(prs):
                    font=d.HEADLINE, size=34, color=d.NAVY)
     title.name = MARKER
     d.accent_bar(s, 0.9, 3.85)
-
-    d.text(s, "Four pieces are still missing:", 0.9, 4.05, 3.0, 0.22, size=11, color=d.MUTED)
-    x = 0.9
-    for piece in PIECES:
-        w = 0.34 + 0.075 * len(piece)
-        d.chip(s, piece, x, 4.34, w, h=0.34, fill=d.WHITE, color=d.NAVY, size=10, font=d.BODY,
-               line=d.BORDER)
-        x += w + 0.12
     return s
 
 
